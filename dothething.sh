@@ -4,8 +4,8 @@
 python rename_aax_files.py
 
 # Wang through and convert AAX to MP3
-for directory in */; do
-    # Any dirs in here should've been created by the rename script...
+convert_aax_to_mp3() {
+    directory=$1
     cd "$directory"
     # Check if any MP3 files already exist in the directory. If so, skippity skip
     if [ -n "$(find . -maxdepth 1 -iname '*.mp3' -print -quit)" ]; then
@@ -13,9 +13,19 @@ for directory in */; do
     else
         # There *should* only be one... But you never know...
         for file in *.aax; do
-            python ../conv.py -i "$file" -a ADD_BYTES_HERE
+            python ../conv.py -i "$file" -a 9f1ec808
         done
     fi
     # Go back up, ready for the next
     cd ..
+}
+
+# Murder the CPU with separate processes...
+for directory in */; do
+    convert_aax_to_mp3 "$directory" &
 done
+
+# Hang around for them all to finish
+wait
+
+echo "Ding! Conversions went brrrr. Bye"
