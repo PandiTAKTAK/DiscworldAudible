@@ -20,6 +20,21 @@ convert_aax_to_mp3() {
     cd ..
 }
 
+zip_directories() {
+    directory=$1
+    # Dir without trailing slash
+    dir_name=$(basename "$directory")
+    # if zip exists
+    if [ -f "${dir_name}.zip" ]; then
+        echo "Zip for $directory already exists. Skipping..."
+    else
+        # Create a zip file for the directory excluding .aax files
+        zip -r "${dir_name}.zip" "$directory" -x "*.aax"
+    fi
+}
+
+###############
+
 # Murder the CPU with separate processes...
 for directory in */; do
     convert_aax_to_mp3 "$directory" &
@@ -28,4 +43,17 @@ done
 # Hang around for them all to finish
 wait
 
-echo "Ding! Conversions went brrrr. Bye"
+echo "Ding! Conversions went brrrr..."
+
+#####
+
+echo "Zipping resulting contents without *.aax"
+
+# Loop through each directory and zip them
+for directory in */; do
+    zip_directories "$directory" &
+done
+
+wait
+
+echo "Completed Zipping!"
