@@ -23,6 +23,7 @@ Effectievly wraps everything for convenience.
 
 - Calls `rename_aax_files.py`
 - Calls `conv.py`
+- zips the resulting MP3s
 
 ### rename_aax_files.py
 
