@@ -5,8 +5,16 @@ def rename_aax_files(directory):
     for filename in os.listdir(directory):
         if filename.endswith(".aax"):
             print("Working on: " + filename)
-            book_number = filename.split('Book')[1].split('_')[0]
-            book_name = filename.split('DiscworldBook')[0]
+            if 'DiscworldBook' in filename:
+                split_token = 'DiscworldBook'
+            elif 'DiscworldNovel' in filename:
+                split_token = 'DiscworldNovel'
+            else:
+                print("Unrecognized filename format: " + filename)
+                continue
+            
+            book_name, rest = filename.split(split_token)
+            book_number = rest.split('_')[0]
             
             # We must construct additional filenames
             new_filename = "Book-" + book_number + "_" + book_name + ".aax"
